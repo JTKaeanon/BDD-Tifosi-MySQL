@@ -1,30 +1,23 @@
--- -------------------------------------------------------------------------
--- Script de création de la base de données 'tifosi'
--- Auteur : [Ton Nom]
--- Date : [Date du jour]
--- -------------------------------------------------------------------------
+-- Initialisation de la structure de la base de données 'Tifosi'
 
--- 1. Création de la base de données
--- On supprime la base si elle existe déjà pour repartir sur des bases saines
+
+-- Nettoyage et Création
+-- base saine à chaque exécution
 DROP DATABASE IF EXISTS tifosi;
 CREATE DATABASE tifosi DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 
--- Sélection de la base
 USE tifosi;
 
--- 2. Création de l'utilisateur administrateur
--- On crée l'utilisateur 'tifosi' avec le mot de passe (à changer en prod)
+-- Gestion des accès
+-- Création de l'administrateur avec ses privilèges
 CREATE USER IF NOT EXISTS 'tifosi'@'localhost' IDENTIFIED BY 'tifosi_password';
--- On lui donne tous les droits sur la base tifosi
 GRANT ALL PRIVILEGES ON tifosi.* TO 'tifosi'@'localhost';
--- On applique les changements de droits
 FLUSH PRIVILEGES;
 
--- -------------------------------------------------------------------------
--- 3. Création des tables
--- -------------------------------------------------------------------------
+-- Création du catalogue 
 
--- Table : client
+
+-- Répertoire clients
 CREATE TABLE client (
     id_client INT AUTO_INCREMENT PRIMARY KEY,
     nom VARCHAR(45) NOT NULL,
@@ -32,28 +25,26 @@ CREATE TABLE client (
     email VARCHAR(45) NOT NULL UNIQUE
 ) ENGINE=InnoDB;
 
--- Table : marque
+-- Marques boissons disponibles
 CREATE TABLE marque (
     id_marque INT AUTO_INCREMENT PRIMARY KEY,
     nom VARCHAR(45) NOT NULL UNIQUE
 ) ENGINE=InnoDB;
 
--- Table : ingredient
+-- Stock ingrédients
 CREATE TABLE ingredient (
     id_ingredient INT AUTO_INCREMENT PRIMARY KEY,
     nom VARCHAR(45) NOT NULL UNIQUE
 ) ENGINE=InnoDB;
 
--- Table : focaccia
--- Le prix est en DECIMAL pour éviter les erreurs d'arrondi des FLOAT
+-- Carte Focaccias
 CREATE TABLE focaccia (
     id_focaccia INT AUTO_INCREMENT PRIMARY KEY,
     nom VARCHAR(45) NOT NULL,
     prix DECIMAL(5, 2) NOT NULL
 ) ENGINE=InnoDB;
 
--- Table : boisson
--- Relation (1,1) avec marque : une boisson appartient à une marque
+-- Carte  Boissons
 CREATE TABLE boisson (
     id_boisson INT AUTO_INCREMENT PRIMARY KEY,
     nom VARCHAR(45) NOT NULL,
@@ -62,8 +53,7 @@ CREATE TABLE boisson (
         ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
--- Table : menu
--- Relation (1,1) avec focaccia et boisson
+-- formule Focaccia + Boisson
 CREATE TABLE menu (
     id_menu INT AUTO_INCREMENT PRIMARY KEY,
     nom VARCHAR(45) NOT NULL,
@@ -76,26 +66,20 @@ CREATE TABLE menu (
         ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
--- -------------------------------------------------------------------------
--- 4. Création des tables d'association (Relations N,N)
--- -------------------------------------------------------------------------
 
--- Table : paye (Relation 'achete' entre Client et Menu)
--- Note : J'utilise 'paye' car 'achete' est un verbe, souvent on nomme la table 'vente' ou 'ticket'
--- La consigne demande de respecter le modèle, donc on suit la logique "Client achete Menu"
+-- Historique achats 
 CREATE TABLE achete (
     id_client INT NOT NULL,
     id_menu INT NOT NULL,
     jour DATE NOT NULL DEFAULT (CURRENT_DATE),
-    CONSTRAINT pk_achete PRIMARY KEY (id_client, id_menu, jour), -- Clé primaire composite
+    CONSTRAINT pk_achete PRIMARY KEY (id_client, id_menu, jour),
     CONSTRAINT fk_achete_client FOREIGN KEY (id_client) REFERENCES client(id_client)
         ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT fk_achete_menu FOREIGN KEY (id_menu) REFERENCES menu(id_menu)
         ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
--- Table : comprend (Relation entre Focaccia et Ingredient)
--- Gère la composition des focaccias. Un ingrédient peut être dans plusieurs focaccias.
+-- Recettes 
 CREATE TABLE comprend (
     id_focaccia INT NOT NULL,
     id_ingredient INT NOT NULL,

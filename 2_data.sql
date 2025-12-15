@@ -4,10 +4,10 @@
 -- -------------------------------------------------------------------------
 USE tifosi;
 
--- Désactiver temporairement la vérification des clés étrangères pour éviter les erreurs d'ordre
+-- Désactiver temporairement la vérification des clés étrangères
 SET FOREIGN_KEY_CHECKS = 0;
 
--- Vider les tables avant d'insérer (pour éviter les doublons si on relance le script)
+-- Vider les tables pour repartir à zéro
 TRUNCATE TABLE achete;
 TRUNCATE TABLE comprend;
 TRUNCATE TABLE menu;
@@ -20,39 +20,39 @@ TRUNCATE TABLE client;
 SET FOREIGN_KEY_CHECKS = 1;
 
 -- -------------------------------------------------------------------------
--- 1. Insertion des Marques
+-- 1. Insertion des Marques (Source : marque.csv)
 -- -------------------------------------------------------------------------
 INSERT INTO marque (id_marque, nom) VALUES 
-(1, 'Coca-Cola'), 
-(2, 'Cristaline'), 
+(1, 'Coca-cola'), 
+(2, 'Cristalline'), 
 (3, 'Monster'), 
 (4, 'Pepsico');
 
 -- -------------------------------------------------------------------------
--- 2. Insertion des Ingrédients
+-- 2. Insertion des Ingrédients (Source : ingredient.csv)
 -- -------------------------------------------------------------------------
 INSERT INTO ingredient (id_ingredient, nom) VALUES 
 (1, 'Ail'), (2, 'Ananas'), (3, 'Artichaut'), (4, 'Bacon'), (5, 'Base Tomate'), 
-(6, 'Base Crème'), (7, 'Champignon'), (8, 'Chevre'), (9, 'Cresson'), (10, 'Emmental'), 
+(6, 'Base crème'), (7, 'Champignon'), (8, 'Chevre'), (9, 'Cresson'), (10, 'Emmental'), 
 (11, 'Gorgonzola'), (12, 'Jambon cuit'), (13, 'Jambon fumé'), (14, 'Oeuf'), (15, 'Oignon'), 
-(16, 'Olive'), (17, 'Parmesan'), (18, 'Piment'), (19, 'Poivron'), (20, 'Pomme de terre'), 
-(21, 'Raclette'), (22, 'Salami'), (23, 'Tomate Cerise'), (24, 'Mozzarella'), (25, 'Miel');
+(16, 'Olive noire'), (17, 'Olive verte'), (18, 'Parmesan'), (19, 'Piment'), (20, 'Poivre'), 
+(21, 'Pomme de terre'), (22, 'Raclette'), (23, 'Salami'), (24, 'Tomate cerise'), (25, 'Mozarella');
 
 -- -------------------------------------------------------------------------
--- 3. Insertion des Focaccias
+-- 3. Insertion des Focaccias (Source : focaccia.csv)
 -- -------------------------------------------------------------------------
 INSERT INTO focaccia (id_focaccia, nom, prix) VALUES 
-(1, 'Mozzaccia', 9.80), 
-(2, 'Gorgonzola', 10.80), 
+(1, 'Mozaccia', 9.80), 
+(2, 'Gorgonzollaccia', 10.80), 
 (3, 'Raclaccia', 8.90), 
-(4, 'Emmental', 9.80), 
+(4, 'Emmentalaccia', 9.80), 
 (5, 'Tradizione', 8.90), 
 (6, 'Hawaienne', 11.20), 
 (7, 'Américaine', 10.80), 
 (8, 'Paysanne', 12.80);
 
 -- -------------------------------------------------------------------------
--- 4. Insertion des Boissons (liées aux Marques)
+-- 4. Insertion des Boissons (Source : boisson.csv)
 -- -------------------------------------------------------------------------
 INSERT INTO boisson (id_boisson, nom, id_marque) VALUES 
 (1, 'Coca-cola zéro', 1), 
@@ -62,53 +62,55 @@ INSERT INTO boisson (id_boisson, nom, id_marque) VALUES
 (5, 'Capri-sun', 1), 
 (6, 'Pepsi', 4), 
 (7, 'Pepsi Max Zéro', 4), 
-(8, 'Lipton zéro', 4), 
+(8, 'Lipton zéro citron', 4), 
 (9, 'Lipton Peach', 4), 
 (10, 'Monster energy ultra gold', 3), 
 (11, 'Monster energy ultra blue', 3), 
-(12, 'Eau de source', 2);
+(12, 'Eau de source ', 2);
 
 -- -------------------------------------------------------------------------
--- 5. Insertion des Compositions (Table comprend : Focaccia <-> Ingredient)
+-- 5. Insertion des Compositions (Table comprend)
+-- Reconstitué d'après focaccia.csv (colonne ingrédients)
 -- -------------------------------------------------------------------------
--- Mozzaccia (Base Tomate, Mozzarella, Cresson, Jambon fumé, Ail, Artichaut, Parmesan)
-INSERT INTO comprend (id_focaccia, id_ingredient) VALUES 
-(1, 5), (1, 24), (1, 9), (1, 13), (1, 1), (1, 3), (1, 17);
 
--- Gorgonzola (Base Tomate, Gorgonzola, Cresson, Ail, Champignon, Parmesan)
+-- 1. Mozaccia : Base tomate, Mozarella, cresson, jambon fumé, ail, artichaut, champignon, parmesan, poivre, olive noire
 INSERT INTO comprend (id_focaccia, id_ingredient) VALUES 
-(2, 5), (2, 11), (2, 9), (2, 1), (2, 7), (2, 17);
+(1, 5), (1, 25), (1, 9), (1, 13), (1, 1), (1, 3), (1, 7), (1, 18), (1, 20), (1, 16);
 
--- Raclaccia (Base Tomate, Raclette, Cresson, Ail, Champignon, Parmesan)
+-- 2. Gorgonzollaccia : Base tomate, Gorgonzola, cresson, ail, champignon, parmesan, poivre, olive noire
 INSERT INTO comprend (id_focaccia, id_ingredient) VALUES 
-(3, 5), (3, 21), (3, 9), (3, 1), (3, 7), (3, 17);
+(2, 5), (2, 11), (2, 9), (2, 1), (2, 7), (2, 18), (2, 20), (2, 16);
 
--- Emmental (Base Crème, Emmental, Cresson, Champignon, Parmesan)
+-- 3. Raclaccia : Base tomate, raclette, cresson, ail, champignon, parmesan, poivre
 INSERT INTO comprend (id_focaccia, id_ingredient) VALUES 
-(4, 6), (4, 10), (4, 9), (4, 7), (4, 17);
+(3, 5), (3, 22), (3, 9), (3, 1), (3, 7), (3, 18), (3, 20);
 
--- Tradizione (Base Tomate, Mozzarella, Olive, Jambon cuit, Champignon)
+-- 4. Emmentalaccia : Base crème, Emmental, cresson, champignon, parmesan, poivre, oignon
 INSERT INTO comprend (id_focaccia, id_ingredient) VALUES 
-(5, 5), (5, 24), (5, 16), (5, 12), (5, 7);
+(4, 6), (4, 10), (4, 9), (4, 7), (4, 18), (4, 20), (4, 15);
 
--- Hawaienne (Base Tomate, Mozzarella, Ananas, Bacon) - Pas de champignon
+-- 5. Tradizione : Base tomate, Mozarella, cresson, jambon cuit, champignon, parmesan, poivre, olive noire, olive verte
 INSERT INTO comprend (id_focaccia, id_ingredient) VALUES 
-(6, 5), (6, 24), (6, 2), (6, 4);
+(5, 5), (5, 25), (5, 9), (5, 12), (5, 7), (5, 18), (5, 20), (5, 16), (5, 17);
 
--- Américaine (Base Tomate, Mozzarella, Bacon, Pomme de terre) - Pas de champignon
+-- 6. Hawaienne : Base tomate, Mozarella, cresson, bacon, ananas, piment, parmesan, poivre, olive noire
 INSERT INTO comprend (id_focaccia, id_ingredient) VALUES 
-(7, 5), (7, 24), (7, 4), (7, 20);
+(6, 5), (6, 25), (6, 9), (6, 4), (6, 2), (6, 19), (6, 18), (6, 20), (6, 16);
 
--- Paysanne (Base Crème, Chevre, Miel, Jambon fumé) - Pas de champignon
+-- 7. Américaine : Base tomate, Mozarella, cresson, bacon, pomme de terre, parmesan, poivre, olive noire
 INSERT INTO comprend (id_focaccia, id_ingredient) VALUES 
-(8, 6), (8, 8), (8, 25), (8, 13);
+(7, 5), (7, 25), (7, 9), (7, 4), (7, 21), (7, 18), (7, 20), (7, 16);
+
+-- 8. Paysanne : Base crème, Chèvre, cresson, pomme de terre, jambon fumé, ail, artichaut, champignon, parmesan, poivre, olive noire, œuf
+INSERT INTO comprend (id_focaccia, id_ingredient) VALUES 
+(8, 6), (8, 8), (8, 9), (8, 21), (8, 13), (8, 1), (8, 3), (8, 7), (8, 18), (8, 20), (8, 16), (8, 14);
 
 -- -------------------------------------------------------------------------
--- 6. Insertion des Menus & Clients (Données fictives pour tester)
+-- 6. Données de test supplémentaires (Menus & Clients)
 -- -------------------------------------------------------------------------
 INSERT INTO menu (nom, prix, id_focaccia, id_boisson) VALUES 
-('Menu Etudiant', 16.00, 3, 1), -- Raclaccia + Coca Zero
-('Menu Duo', 20.00, 1, 12);     -- Mozzaccia + Eau
+('Menu Etudiant', 16.00, 3, 1), 
+('Menu Duo', 20.00, 1, 12);
 
 INSERT INTO client (nom, age, email) VALUES 
 ('Dupont Pierre', 22, 'pierre.dupont@email.fr'),

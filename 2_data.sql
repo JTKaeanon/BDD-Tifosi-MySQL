@@ -1,4 +1,3 @@
--- Chargement  données de référence 
 
 USE tifosi;
 
@@ -16,13 +15,13 @@ TRUNCATE TABLE client;
 
 SET FOREIGN_KEY_CHECKS = 1;
 
---   Référentiel des Marques
+-- Marques
 
 INSERT INTO marque (id_marque, nom) VALUES 
 (1, 'Coca-cola'), (2, 'Cristalline'), (3, 'Monster'), (4, 'Pepsico');
 
 
--- Référentiel  Ingrédients
+-- Ingrédients
 
 INSERT INTO ingredient (id_ingredient, nom) VALUES 
 (1, 'Ail'), (2, 'Ananas'), (3, 'Artichaut'), (4, 'Bacon'), (5, 'Base Tomate'), 

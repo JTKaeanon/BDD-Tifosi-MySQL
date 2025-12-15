@@ -62,3 +62,4 @@ WHERE id_focaccia NOT IN (
     JOIN ingredient i ON c.id_ingredient = i.id_ingredient
     WHERE i.nom = 'Champignon'
 );
+

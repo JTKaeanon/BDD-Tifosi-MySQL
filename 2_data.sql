@@ -1,9 +1,8 @@
-
 USE tifosi;
 
 SET FOREIGN_KEY_CHECKS = 0;
 
--- Remise à zéro 
+-- Reset
 TRUNCATE TABLE achete;
 TRUNCATE TABLE comprend;
 TRUNCATE TABLE menu;
@@ -15,13 +14,13 @@ TRUNCATE TABLE client;
 
 SET FOREIGN_KEY_CHECKS = 1;
 
--- Marques
+-- Brands
 
 INSERT INTO marque (id_marque, nom) VALUES 
 (1, 'Coca-cola'), (2, 'Cristalline'), (3, 'Monster'), (4, 'Pepsico');
 
 
--- Ingrédients
+-- Ingredients
 
 INSERT INTO ingredient (id_ingredient, nom) VALUES 
 (1, 'Ail'), (2, 'Ananas'), (3, 'Artichaut'), (4, 'Bacon'), (5, 'Base Tomate'), 
@@ -31,14 +30,14 @@ INSERT INTO ingredient (id_ingredient, nom) VALUES
 (21, 'Pomme de terre'), (22, 'Raclette'), (23, 'Salami'), (24, 'Tomate cerise'), (25, 'Mozarella');
 
 
---  Focaccias
+-- Focaccias
 
 INSERT INTO focaccia (id_focaccia, nom, prix) VALUES 
 (1, 'Mozaccia', 9.80), (2, 'Gorgonzollaccia', 10.80), (3, 'Raclaccia', 8.90), (4, 'Emmentalaccia', 9.80), 
 (5, 'Tradizione', 8.90), (6, 'Hawaienne', 11.20), (7, 'Américaine', 10.80), (8, 'Paysanne', 12.80);
 
 
--- Boissons
+-- Drinks
 
 INSERT INTO boisson (id_boisson, nom, id_marque) VALUES 
 (1, 'Coca-cola zéro', 1), (2, 'Coca-cola original', 1), (3, 'Fanta citron', 1), (4, 'Fanta orange', 1), 
@@ -47,10 +46,10 @@ INSERT INTO boisson (id_boisson, nom, id_marque) VALUES
 (12, 'Eau de source ', 2);
 
 
--- Détail recettes (Focaccia - Ingrédients)
+-- Recipe details (Focaccia - Ingredients)
 
 
--- Mozaccia (Base Tomate, Mozzarella, Jambon fumé, etc.)
+-- Mozaccia (Tomato base, Mozzarella, Smoked ham, etc.)
 INSERT INTO comprend (id_focaccia, id_ingredient) VALUES 
 (1, 5), (1, 25), (1, 9), (1, 13), (1, 1), (1, 3), (1, 7), (1, 18), (1, 20), (1, 16);
 
@@ -81,4 +80,3 @@ INSERT INTO comprend (id_focaccia, id_ingredient) VALUES
 -- Paysanne
 INSERT INTO comprend (id_focaccia, id_ingredient) VALUES 
 (8, 6), (8, 8), (8, 9), (8, 21), (8, 13), (8, 1), (8, 3), (8, 7), (8, 18), (8, 20), (8, 16), (8, 14);
-

@@ -1,23 +1,19 @@
--- Initialisation de la structure de la base de données 'Tifosi'
-
-
--- Nettoyage et Création
--- base saine à chaque exécution
+-- clean base on each execution
 DROP DATABASE IF EXISTS tifosi;
 CREATE DATABASE tifosi DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 
 USE tifosi;
 
--- Gestion des accès
--- Création de l'administrateur avec ses privilèges
+-- Access management
+-- Admin creation
 CREATE USER IF NOT EXISTS 'tifosi'@'localhost' IDENTIFIED BY 'tifosi_password';
 GRANT ALL PRIVILEGES ON tifosi.* TO 'tifosi'@'localhost';
 FLUSH PRIVILEGES;
 
--- Création du catalogue 
+-- Catalog creation 
 
 
--- Répertoire clients
+-- Clients directory
 CREATE TABLE client (
     id_client INT AUTO_INCREMENT PRIMARY KEY,
     nom VARCHAR(45) NOT NULL,
@@ -25,26 +21,26 @@ CREATE TABLE client (
     email VARCHAR(45) NOT NULL UNIQUE
 ) ENGINE=InnoDB;
 
--- Marques boissons disponibles
+-- Available drink brands
 CREATE TABLE marque (
     id_marque INT AUTO_INCREMENT PRIMARY KEY,
     nom VARCHAR(45) NOT NULL UNIQUE
 ) ENGINE=InnoDB;
 
--- Stock ingrédients
+-- Ingredient stock
 CREATE TABLE ingredient (
     id_ingredient INT AUTO_INCREMENT PRIMARY KEY,
     nom VARCHAR(45) NOT NULL UNIQUE
 ) ENGINE=InnoDB;
 
--- Carte Focaccias
+-- Focaccia menu
 CREATE TABLE focaccia (
     id_focaccia INT AUTO_INCREMENT PRIMARY KEY,
     nom VARCHAR(45) NOT NULL,
     prix DECIMAL(5, 2) NOT NULL
 ) ENGINE=InnoDB;
 
--- Carte  Boissons
+-- Drinks menu
 CREATE TABLE boisson (
     id_boisson INT AUTO_INCREMENT PRIMARY KEY,
     nom VARCHAR(45) NOT NULL,
@@ -53,7 +49,7 @@ CREATE TABLE boisson (
         ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
--- formule Focaccia + Boisson
+-- Focaccia + Drink combo
 CREATE TABLE menu (
     id_menu INT AUTO_INCREMENT PRIMARY KEY,
     nom VARCHAR(45) NOT NULL,
@@ -67,7 +63,7 @@ CREATE TABLE menu (
 ) ENGINE=InnoDB;
 
 
--- Historique achats 
+-- Purchase history 
 CREATE TABLE achete (
     id_client INT NOT NULL,
     id_menu INT NOT NULL,
@@ -79,7 +75,7 @@ CREATE TABLE achete (
         ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
--- Recettes 
+-- Recipes 
 CREATE TABLE comprend (
     id_focaccia INT NOT NULL,
     id_ingredient INT NOT NULL,
